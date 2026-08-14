@@ -694,29 +694,26 @@
 
               <div id="accountPanel" class="account-panel">
                 <form id="accountForm" class="account-form">
-                  <input id="emailInput" type="email" placeholder="Email" autocomplete="email" required />
-                  <input id="passwordInput" type="password" placeholder="Password" autocomplete="new-password" required />
-                  <button type="submit" class="submit-btn old-lettering">Create account</button>
+                  <input id="emailInput" type="email" placeholder="Owner email" autocomplete="email" required />
+                  <input id="passwordInput" type="password" placeholder="Owner password" autocomplete="current-password" required />
+                  <button type="submit" class="submit-btn old-lettering">Login to private logs</button>
                 </form>
               </div>
 
               <div id="chatPanel" class="chat-panel hidden">
-                <div class="account-badge old-lettering" id="accountBadge">Client</div>
+                <div class="account-badge old-lettering" id="accountBadge">Owner</div>
                 <div class="owner-email-box old-lettering">Owner: santomito1666@outlook.com</div>
                 <div class="chat-box" id="chatBox"></div>
 
-                <div class="private-header old-lettering">Private account log</div>
+                <div class="private-header old-lettering">Private log</div>
                 <div id="logList" class="log-list"></div>
 
-                <form id="ownerMailForm" class="owner-mail-form">
-                  <textarea id="ownerMailMessage" rows="3" placeholder="Write your message to the owner..." required></textarea>
-                  <button type="submit" class="submit-btn old-lettering">Send to owner</button>
+                <form id="chatForm" class="chat-form">
+                  <textarea id="chatInput" rows="3" placeholder="Leave a private note..." required></textarea>
+                  <button type="submit" class="submit-btn old-lettering">Save privately</button>
                 </form>
 
-                <form id="chatForm" class="chat-form">
-                  <textarea id="chatInput" rows="3" placeholder="Ask about a spell..." required></textarea>
-                  <button type="submit" class="submit-btn old-lettering">Send privately</button>
-                </form>
+                <button id="logoutBtn" type="button" class="submit-btn old-lettering">Logout</button>
               </div>
             </div>
           </div>
@@ -732,6 +729,7 @@
     const cartBox = document.getElementById('cartBox');
     const totalValue = document.getElementById('totalValue');
     const OWNER_EMAIL = 'santomito1666@outlook.com';
+    const OWNER_PASSWORD = 'krampus2024';
 
     const STORAGE_KEYS = {
       account: 'krampus_private_account',
@@ -890,6 +888,16 @@
       renderLogs();
     }
 
+    function tryLogin(email, password) {
+      const valid = String(email || '').trim().toLowerCase() === OWNER_EMAIL.toLowerCase() && String(password || '').trim() === OWNER_PASSWORD;
+      if (!valid) {
+        return false;
+      }
+      account = { email: OWNER_EMAIL, password: OWNER_PASSWORD };
+      saveAccount();
+      return true;
+    }
+
     const accountForm = document.getElementById('accountForm');
     if (accountForm) {
       accountForm.addEventListener('submit', (event) => {
@@ -902,8 +910,11 @@
 
         if (!email || !password) return;
 
-        account = { email, password };
-        saveAccount();
+        if (!tryLogin(email, password)) {
+          alert('Incorrect owner login. Use the private owner email and password.');
+          return;
+        }
+
         updateClientState();
       });
     }
@@ -928,33 +939,12 @@
       });
     }
 
-    const ownerMailForm = document.getElementById('ownerMailForm');
-    if (ownerMailForm) {
-      ownerMailForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const ownerMailMessage = document.getElementById('ownerMailMessage');
-        const text = ownerMailMessage.value.trim();
-
-        if (!text) return;
-
-        const sender = account && account.email ? account.email : 'private client';
-        const subject = encodeURIComponent('Private spell inquiry');
-        const body = encodeURIComponent(
-          'Sender: ' + sender + '\n\n' +
-          'Message:\n' + text
-        );
-
-        const mailtoLink = 'mailto:' + OWNER_EMAIL + '?subject=' + subject + '&body=' + body;
-        window.location.href = mailtoLink;
-
-        messages.push({ sender: 'me', text: '[Sent to owner via email] ' + text, createdAt: new Date().toISOString() });
-        const currentLog = ensureCurrentLog();
-        if (currentLog) currentLog.messages = messages;
-        saveMessages();
-        saveLogs();
-        renderMessages();
-        renderLogs();
-        ownerMailMessage.value = '';
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', () => {
+        account = null;
+        localStorage.removeItem(STORAGE_KEYS.account);
+        updateClientState();
       });
     }
 
