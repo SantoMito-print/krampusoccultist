@@ -427,6 +427,44 @@
       letter-spacing: .18em;
       text-transform: uppercase;
     }
+    .login-toggle {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      margin: 0 0 14px;
+      flex-wrap: wrap;
+    }
+    .login-toggle button,
+    .mode-btn {
+      border: 1px solid rgba(243,221,174,.2);
+      background: rgba(243,221,174,.05);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 16px;
+      cursor:pointer;
+      font: inherit;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-size: .58rem;
+    }
+    .mode-btn.active {
+      background: rgba(243,221,174,.12);
+      border-color: rgba(243,221,174,.38);
+    }
+    #ownerLoginBtn {
+      opacity: .45;
+      font-size: .48rem;
+      letter-spacing: .14em;
+    }
+    .small-note {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: .52rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      line-height: 1.7;
+    }
     .account-form,
     .chat-form {
       display:grid;
@@ -536,6 +574,33 @@
       display:grid;
       gap:10px;
     }
+    .social-row {
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin: 18px 0 8px;
+    }
+    .social-link {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width: 152px;
+      padding: 12px 18px;
+      border: 1px solid rgba(243,221,174,.2);
+      border-radius: 999px;
+      background: rgba(243,221,174,.04);
+      color: var(--text);
+      text-decoration:none;
+      font-size: .58rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      transition: transform .15s ease, border-color .15s ease;
+    }
+    .social-link:hover {
+      transform: translateY(-1px);
+      border-color: rgba(243,221,174,.35);
+    }
 
     .krampus-sigil {
       display:flex;
@@ -611,7 +676,7 @@
       <span class="bell right"></span>
     </div>
     <h1 class="title old-lettering">Krampus Occultist</h1>
-    <div class="site-url old-lettering">krampusoccultist.com</div>
+    <div class="site-url old-lettering">ink.krampusoccultist.com</div>
   </header>
 
   <main>
@@ -690,37 +755,62 @@
             </div>
 
             <div class="private-panel">
-              <div class="private-header old-lettering">Private client</div>
+            <div class="private-header old-lettering">Private access</div>
+            <div class="login-toggle">
+              <button id="clientLoginBtn" type="button" class="mode-btn active old-lettering">Client</button>
+              <button id="ownerLoginBtn" type="button" class="mode-btn old-lettering">Private</button>
+            </div>
 
-              <div id="accountPanel" class="account-panel">
-                <form id="accountForm" class="account-form">
-                  <input id="emailInput" type="email" placeholder="Owner email" autocomplete="email" required />
-                  <input id="passwordInput" type="password" placeholder="Owner password" autocomplete="current-password" required />
-                  <button type="submit" class="submit-btn old-lettering">Login to private logs</button>
-                </form>
-              </div>
+            <div id="ownerPanel" class="account-panel hidden">
+              <form id="ownerForm" class="account-form">
+                <input id="ownerEmailInput" type="email" placeholder="Owner email" autocomplete="email" required />
+                <input id="ownerPasswordInput" type="password" placeholder="Owner password" autocomplete="current-password" required />
+                <button type="submit" class="submit-btn old-lettering">Owner login</button>
+              </form>
+            </div>
 
-              <div id="chatPanel" class="chat-panel hidden">
-                <div class="account-badge old-lettering" id="accountBadge">Owner</div>
-                <div class="owner-email-box old-lettering">Owner: santomito1666@outlook.com</div>
-                <div class="chat-box" id="chatBox"></div>
+            <div id="clientPanel" class="account-panel hidden">
+              <form id="clientForm" class="account-form">
+                <input id="clientEmailInput" type="email" placeholder="Client email" autocomplete="email" required />
+                <input id="clientPasswordInput" type="password" placeholder="Create or use password" autocomplete="new-password" required />
+                <button type="submit" class="submit-btn old-lettering">Client login</button>
+              </form>
+              <div class="small-note old-lettering">New clients can sign in here and send the owner a private message.</div>
+            </div>
 
-                <div class="private-header old-lettering">Private log</div>
-                <div id="logList" class="log-list"></div>
+            <div id="ownerChatPanel" class="chat-panel hidden">
+              <div class="account-badge old-lettering" id="ownerBadge">Owner</div>
+              <div class="owner-email-box old-lettering">Owner: santomito1666@outlook.com</div>
+              <div class="chat-box" id="ownerChatBox"></div>
 
-                <form id="chatForm" class="chat-form">
-                  <textarea id="chatInput" rows="3" placeholder="Leave a private note..." required></textarea>
-                  <button type="submit" class="submit-btn old-lettering">Save privately</button>
-                </form>
+              <div class="private-header old-lettering">Private log</div>
+              <div id="ownerLogList" class="log-list"></div>
 
-                <button id="logoutBtn" type="button" class="submit-btn old-lettering">Logout</button>
-              </div>
+              <button id="logoutBtn" type="button" class="submit-btn old-lettering">Logout</button>
+            </div>
+
+            <div id="clientChatPanel" class="chat-panel hidden">
+              <div class="account-badge old-lettering" id="clientBadge">Client</div>
+              <div class="owner-email-box old-lettering" id="clientIdentityBox">Client: guest@email.com</div>
+              <div class="chat-box" id="clientChatBox"></div>
+
+              <form id="clientChatForm" class="chat-form">
+                <textarea id="clientChatInput" rows="3" placeholder="Send a message to the owner..." required></textarea>
+                <button type="submit" class="submit-btn old-lettering">Send privately</button>
+              </form>
+
+              <button id="clientLogoutBtn" type="button" class="submit-btn old-lettering">Logout</button>
+            </div>
             </div>
           </div>
         </aside>
       </section>
     </div>
   </main>
+
+  <div class="social-row">
+    <a class="social-link old-lettering" href="https://instagram.com/krampusoccultist" target="_blank" rel="noreferrer">Instagram</a>
+  </div>
 
   <footer class="old-lettering">No witness • no noise • no second chance</footer>
 
@@ -729,17 +819,67 @@
     const cartBox = document.getElementById('cartBox');
     const totalValue = document.getElementById('totalValue');
     const OWNER_EMAIL = 'santomito1666@outlook.com';
-    const OWNER_PASSWORD = 'krampus2024';
+    const OWNER_PASSWORD = '3000weebob_333';
 
     const STORAGE_KEYS = {
       account: 'krampus_private_account',
       chat: 'krampus_private_chat',
-      logs: 'krampus_private_logs'
+      logs: 'krampus_private_logs',
+      clients: 'krampus_client_accounts'
     };
 
-    let accountLogs = JSON.parse(localStorage.getItem(STORAGE_KEYS.logs) || '[]');
-    let account = JSON.parse(localStorage.getItem(STORAGE_KEYS.account) || 'null');
-    let messages = JSON.parse(localStorage.getItem(STORAGE_KEYS.chat) || '[]');
+    let accountLogs = [];
+    let clientAccounts = [];
+    let currentAccount = null;
+    let messages = [];
+
+    try {
+      accountLogs = JSON.parse(localStorage.getItem(STORAGE_KEYS.logs) || '[]');
+    } catch (error) {
+      accountLogs = [];
+    }
+
+    try {
+      clientAccounts = JSON.parse(localStorage.getItem(STORAGE_KEYS.clients) || '[]');
+    } catch (error) {
+      clientAccounts = [];
+    }
+
+    try {
+      currentAccount = JSON.parse(localStorage.getItem(STORAGE_KEYS.account) || 'null');
+    } catch (error) {
+      currentAccount = null;
+    }
+
+    try {
+      messages = JSON.parse(localStorage.getItem(STORAGE_KEYS.chat) || '[]');
+    } catch (error) {
+      messages = [];
+    }
+
+    function normalizeEmail(value) {
+      return String(value || '').trim().toLowerCase();
+    }
+
+    function saveCurrentAccount() {
+      if (!currentAccount) {
+        localStorage.removeItem(STORAGE_KEYS.account);
+        return;
+      }
+      localStorage.setItem(STORAGE_KEYS.account, JSON.stringify(currentAccount));
+    }
+
+    function saveMessages() {
+      localStorage.setItem(STORAGE_KEYS.chat, JSON.stringify(messages));
+    }
+
+    function saveLogs() {
+      localStorage.setItem(STORAGE_KEYS.logs, JSON.stringify(accountLogs));
+    }
+
+    function saveClientAccounts() {
+      localStorage.setItem(STORAGE_KEYS.clients, JSON.stringify(clientAccounts));
+    }
 
     function formatPrice(value) {
       return new Intl.NumberFormat('en-US').format(value) + ' €';
@@ -785,46 +925,76 @@
       });
     });
 
-    function saveAccount() {
-      localStorage.setItem(STORAGE_KEYS.account, JSON.stringify(account));
+    function getLogEntry(email, role) {
+      const lookup = normalizeEmail(email);
+      return accountLogs.find((entry) => normalizeEmail(entry.email) === lookup && String(entry.role || 'client') === String(role));
     }
 
-    function saveMessages() {
-      localStorage.setItem(STORAGE_KEYS.chat, JSON.stringify(messages));
-    }
+    function ensureLogEntry(email, role, password) {
+      const existing = getLogEntry(email, role);
+      if (existing) {
+        existing.email = email;
+        existing.role = role;
+        existing.password = password;
+        if (!Array.isArray(existing.messages)) existing.messages = [];
+        saveLogs();
+        return existing;
+      }
 
-    function saveLogs() {
-      localStorage.setItem(STORAGE_KEYS.logs, JSON.stringify(accountLogs));
+      const entry = {
+        email: email,
+        role: role,
+        password: password,
+        createdAt: new Date().toISOString(),
+        messages: []
+      };
+      accountLogs.unshift(entry);
+      saveLogs();
+      return entry;
     }
 
     function getCurrentLog() {
-      if (!account) return null;
-      const email = String(account.email || '').toLowerCase();
-      return accountLogs.find((entry) => String(entry.email || '').toLowerCase() === email) || null;
+      if (!currentAccount) return null;
+      return ensureLogEntry(currentAccount.email, currentAccount.role, currentAccount.password || '');
     }
 
-    function ensureCurrentLog() {
-      if (!account) return null;
-      let current = getCurrentLog();
-      if (!current) {
-        current = {
-          email: account.email,
-          password: account.password,
-          createdAt: new Date().toISOString(),
-          messages: []
-        };
-        accountLogs.unshift(current);
-      } else {
-        current.email = account.email;
-        current.password = account.password;
-        if (!Array.isArray(current.messages)) current.messages = [];
+    function getOwnerConversation() {
+      const combined = [];
+      accountLogs.forEach((entry) => {
+        if (!Array.isArray(entry.messages)) return;
+        entry.messages.forEach((message) => {
+          combined.push({
+            email: entry.email,
+            sender: message.sender,
+            text: message.text,
+            createdAt: message.createdAt
+          });
+        });
+      });
+      combined.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      return combined;
+    }
+
+    function updateMainMessageState() {
+      if (!currentAccount) {
+        messages = [];
+        saveMessages();
+        return;
       }
-      saveLogs();
-      return current;
+
+      const log = getCurrentLog();
+      if (currentAccount.role === 'owner') {
+        messages = getOwnerConversation();
+      } else if (log) {
+        messages = Array.isArray(log.messages) ? log.messages : [];
+      } else {
+        messages = [];
+      }
+      saveMessages();
     }
 
-    function renderLogs() {
-      const logList = document.getElementById('logList');
+    function renderOwnerLogs() {
+      const logList = document.getElementById('ownerLogList');
       if (!logList) return;
 
       if (!accountLogs.length) {
@@ -832,14 +1002,14 @@
         return;
       }
 
-      logList.innerHTML = accountLogs.slice(0, 6).map((entry) => {
+      logList.innerHTML = accountLogs.slice(0, 8).map((entry) => {
         const time = new Date(entry.createdAt || Date.now()).toLocaleDateString();
         const count = Array.isArray(entry.messages) ? entry.messages.length : 0;
         return `
           <div class="log-item">
             <div>
               <strong>${entry.email}</strong>
-              ${time}
+              ${entry.role === 'owner' ? 'Owner' : 'Client'} • ${time}
             </div>
             <span>${count} msg</span>
           </div>
@@ -848,108 +1018,203 @@
     }
 
     function renderMessages() {
-      const chatBox = document.getElementById('chatBox');
-      if (!chatBox) return;
+      const ownerChatBox = document.getElementById('ownerChatBox');
+      const clientChatBox = document.getElementById('clientChatBox');
 
-      if (!messages.length) {
-        chatBox.innerHTML = '<div class="chat-empty old-lettering">No private messages yet</div>';
-        return;
-      }
-
-      chatBox.innerHTML = messages.map((message) => `
-        <div class="chat-message ${message.sender === 'me' ? 'me' : ''}">
-          ${message.text}
-        </div>
-      `).join('');
-
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function updateClientState() {
-      const accountPanel = document.getElementById('accountPanel');
-      const chatPanel = document.getElementById('chatPanel');
-      const accountBadge = document.getElementById('accountBadge');
-      const accountForm = document.getElementById('accountForm');
-
-      if (!account) {
-        accountPanel.classList.remove('hidden');
-        chatPanel.classList.add('hidden');
-        if (accountForm) accountForm.reset();
-        return;
-      }
-
-      const activeLog = ensureCurrentLog();
-      messages = Array.isArray(activeLog && activeLog.messages) ? activeLog.messages : [];
-
-      accountPanel.classList.add('hidden');
-      chatPanel.classList.remove('hidden');
-      if (accountBadge) accountBadge.textContent = account.email;
-      renderMessages();
-      renderLogs();
-    }
-
-    function tryLogin(email, password) {
-      const valid = String(email || '').trim().toLowerCase() === OWNER_EMAIL.toLowerCase() && String(password || '').trim() === OWNER_PASSWORD;
-      if (!valid) {
-        return false;
-      }
-      account = { email: OWNER_EMAIL, password: OWNER_PASSWORD };
-      saveAccount();
-      return true;
-    }
-
-    const accountForm = document.getElementById('accountForm');
-    if (accountForm) {
-      accountForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const emailInput = document.getElementById('emailInput');
-        const passwordInput = document.getElementById('passwordInput');
-
-        const email = emailInput.value.trim();
-        const password = passwordInput.value.trim();
-
-        if (!email || !password) return;
-
-        if (!tryLogin(email, password)) {
-          alert('Incorrect owner login. Use the private owner email and password.');
+      if (currentAccount && currentAccount.role === 'owner') {
+        if (!ownerChatBox) return;
+        if (!messages.length) {
+          ownerChatBox.innerHTML = '<div class="chat-empty old-lettering">No private messages yet</div>';
           return;
         }
 
-        updateClientState();
-      });
+        ownerChatBox.innerHTML = messages.map((message) => `
+          <div class="chat-message ${message.sender === 'me' ? 'me' : ''}">
+            ${message.email ? '<strong>' + message.email + '</strong><br>' : ''}${message.text}
+          </div>
+        `).join('');
+        ownerChatBox.scrollTop = ownerChatBox.scrollHeight;
+        return;
+      }
+
+      if (currentAccount && currentAccount.role === 'client') {
+        if (!clientChatBox) return;
+        if (!messages.length) {
+          clientChatBox.innerHTML = '<div class="chat-empty old-lettering">No private messages yet</div>';
+          return;
+        }
+
+        clientChatBox.innerHTML = messages.map((message) => `
+          <div class="chat-message ${message.sender === 'me' ? 'me' : ''}">
+            ${message.text}
+          </div>
+        `).join('');
+        clientChatBox.scrollTop = clientChatBox.scrollHeight;
+      }
     }
 
-    const chatForm = document.getElementById('chatForm');
-    if (chatForm) {
-      chatForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const chatInput = document.getElementById('chatInput');
-        const text = chatInput.value.trim();
+    function syncActiveMessages() {
+      const log = getCurrentLog();
+      if (!log) {
+        messages = [];
+        return;
+      }
 
-        if (!text || !account) return;
+      if (currentAccount.role === 'owner') {
+        messages = getOwnerConversation();
+      } else {
+        messages = Array.isArray(log.messages) ? log.messages : [];
+      }
+      saveMessages();
+    }
 
-        messages.push({ sender: 'me', text, createdAt: new Date().toISOString() });
-        const currentLog = ensureCurrentLog();
-        if (currentLog) currentLog.messages = messages;
-        saveMessages();
-        saveLogs();
+    function setActivePanel(panelName) {
+      const ownerPanel = document.getElementById('ownerPanel');
+      const clientPanel = document.getElementById('clientPanel');
+      const ownerChatPanel = document.getElementById('ownerChatPanel');
+      const clientChatPanel = document.getElementById('clientChatPanel');
+      const ownerLoginBtn = document.getElementById('ownerLoginBtn');
+      const clientLoginBtn = document.getElementById('clientLoginBtn');
+
+      if (ownerPanel) ownerPanel.classList.toggle('hidden', panelName !== 'owner');
+      if (clientPanel) clientPanel.classList.toggle('hidden', panelName !== 'client');
+      if (ownerChatPanel) ownerChatPanel.classList.toggle('hidden', panelName !== 'owner-chat');
+      if (clientChatPanel) clientChatPanel.classList.toggle('hidden', panelName !== 'client-chat');
+
+      if (ownerLoginBtn) ownerLoginBtn.classList.toggle('active', panelName === 'owner');
+      if (clientLoginBtn) clientLoginBtn.classList.toggle('active', panelName === 'client');
+    }
+
+    function updateClientState() {
+      const ownerBadge = document.getElementById('ownerBadge');
+      const clientBadge = document.getElementById('clientBadge');
+      const clientIdentityBox = document.getElementById('clientIdentityBox');
+
+      if (!currentAccount) {
+        setActivePanel('client');
+        document.getElementById('ownerForm').reset();
+        document.getElementById('clientForm').reset();
+        renderOwnerLogs();
+        return;
+      }
+
+      if (currentAccount.role === 'owner') {
+        setActivePanel('owner-chat');
+        if (ownerBadge) ownerBadge.textContent = currentAccount.email;
+        syncActiveMessages();
         renderMessages();
-        renderLogs();
-        chatInput.value = '';
-      });
+        renderOwnerLogs();
+        return;
+      }
+
+      setActivePanel('client-chat');
+      if (clientBadge) clientBadge.textContent = currentAccount.email;
+      if (clientIdentityBox) clientIdentityBox.textContent = 'Client: ' + currentAccount.email;
+      const log = getCurrentLog();
+      if (log) {
+        messages = Array.isArray(log.messages) ? log.messages : [];
+      } else {
+        messages = [];
+      }
+      saveMessages();
+      renderMessages();
     }
 
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', () => {
-        account = null;
-        localStorage.removeItem(STORAGE_KEYS.account);
-        updateClientState();
-      });
+    function tryOwnerLogin(email, password) {
+      const valid = normalizeEmail(email) === normalizeEmail(OWNER_EMAIL) && String(password || '').trim() === OWNER_PASSWORD;
+      if (!valid) return false;
+      currentAccount = { email: OWNER_EMAIL, password: OWNER_PASSWORD, role: 'owner' };
+      saveCurrentAccount();
+      return true;
     }
+
+    function tryClientLogin(email, password) {
+      const normalizedEmail = normalizeEmail(email);
+      const trimmedPassword = String(password || '').trim();
+      if (!normalizedEmail || !trimmedPassword) return false;
+
+      let existing = clientAccounts.find((entry) => normalizeEmail(entry.email) === normalizedEmail);
+      if (!existing) {
+        existing = { email: normalizedEmail, password: trimmedPassword, createdAt: new Date().toISOString() };
+        clientAccounts.push(existing);
+        saveClientAccounts();
+      } else if (existing.password !== trimmedPassword) {
+        return false;
+      }
+
+      currentAccount = { email: normalizedEmail, password: trimmedPassword, role: 'client' };
+      saveCurrentAccount();
+      ensureLogEntry(normalizedEmail, 'client', trimmedPassword);
+      return true;
+    }
+
+    document.getElementById('ownerLoginBtn').addEventListener('click', function () {
+      setActivePanel('owner');
+    });
+
+    document.getElementById('clientLoginBtn').addEventListener('click', function () {
+      setActivePanel('client');
+    });
+
+    document.getElementById('ownerForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const email = document.getElementById('ownerEmailInput').value.trim();
+      const password = document.getElementById('ownerPasswordInput').value.trim();
+
+      if (!email || !password) return;
+      if (!tryOwnerLogin(email, password)) {
+        alert('Incorrect owner login details.');
+        return;
+      }
+
+      updateClientState();
+    });
+
+    document.getElementById('clientForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const email = document.getElementById('clientEmailInput').value.trim();
+      const password = document.getElementById('clientPasswordInput').value.trim();
+
+      if (!email || !password) return;
+      if (!tryClientLogin(email, password)) {
+        alert('That client login is not valid. Try your email and password again.');
+        return;
+      }
+
+      updateClientState();
+    });
+
+    document.getElementById('clientChatForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const text = document.getElementById('clientChatInput').value.trim();
+      if (!text || !currentAccount || currentAccount.role !== 'client') return;
+
+      const log = getCurrentLog();
+      if (!log) return;
+
+      log.messages = Array.isArray(log.messages) ? log.messages : [];
+      log.messages.push({ sender: 'me', text: text, createdAt: new Date().toISOString() });
+      messages = log.messages;
+      saveLogs();
+      saveMessages();
+      renderMessages();
+      document.getElementById('clientChatInput').value = '';
+    });
+
+    document.getElementById('clientLogoutBtn').addEventListener('click', function () {
+      currentAccount = null;
+      saveCurrentAccount();
+      updateClientState();
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', function () {
+      currentAccount = null;
+      saveCurrentAccount();
+      updateClientState();
+    });
 
     renderCart();
-    renderLogs();
+    renderOwnerLogs();
     updateClientState();
   </script>
 </body>
