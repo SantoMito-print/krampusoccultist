@@ -530,15 +530,15 @@
         </div>
       </div>
 
-      <form onsubmit="submitForm(event)">
+      <form action="https://formspree.io/f/xyzpqrst" method="POST" onsubmit="return submitForm(event)">
         <label for="name">Your name</label>
-        <input id="name" type="text" placeholder="Your name" required />
+        <input id="name" name="name" type="text" placeholder="Your name" required />
 
         <label for="email">Email address</label>
-        <input id="email" type="email" placeholder="you@example.com" required />
+        <input id="email" name="email" type="email" placeholder="you@example.com" required />
 
         <label for="service">Interested in</label>
-        <select id="service" required>
+        <select id="service" name="service" required>
           <option value="">Choose an offering</option>
           <option>Spiritual Consultation</option>
           <option>Intention Ritual</option>
@@ -547,7 +547,7 @@
         </select>
 
         <label for="message">Message</label>
-        <textarea id="message" placeholder="How can we help?"></textarea>
+        <textarea id="message" name="message" placeholder="How can we help?"></textarea>
 
         <button class="button" type="submit">Send Inquiry</button>
         <p id="form-message" style="margin-top: 15px; color: #4a2d6e;"></p>
@@ -575,13 +575,9 @@
     }
 
     function submitForm(event) {
-      event.preventDefault();
-
       const message = document.getElementById("form-message");
-      message.textContent =
-        "Thank you. Your inquiry has been received and we will be in touch soon.";
-
-      event.target.reset();
+      message.textContent = "Sending your inquiry...";
+      return true;
     }
   </script>
 </body>
